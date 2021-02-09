@@ -1,25 +1,17 @@
-import { useEffect, useState } from "react";
-import BlogList from "./BlogList";
+// command to run json server
+//npx json-server --watch data/db.json --port 8000
+
+import BlogList from './BlogList';
+import useFetch from './useFetch';
 
 const Home = () => {
-  const [blogs, setBlogs] = useState(null);
-  const [isPending, setIsPending] = useState(true);
+  const { data: blogs, isPending, error } = useFetch('http://localhost:8000/blogs');
 
-  useEffect(() => {
-    setTimeout(() => {
-      fetch('http://localhost:8000/blogs')
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        setIsPending(false);
-        setBlogs(data);
-      })
-    }, 1000);
-  }, [])
+
 
   return (
     <div className="home">
+      { error && <div>{ error }</div> }
       { isPending && <div>Loading...</div> }
       {blogs && <BlogList blogs={blogs} />}
     </div>
